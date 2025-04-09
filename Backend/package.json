@@ -1,0 +1,12 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["media app","backend", "post","like-comments","user-profile"],
+  "author": "Om Dwivedi",
+  "license": "ISC",
+  "description": "Media app where user can create account , login to account & can perform CRUD operation on their profile, can create post perform CRUD operation also there is features of like and comments. "
+}
