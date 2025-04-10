@@ -6,7 +6,12 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
-const db = require('./config/db');
+const connectDB = require('./config/db');
+const errorHandler = require('./middleware/errorHandler') // Import custom error handler middleware
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const postRoutes = require('./routes/postRoutes');
+const commentRoutes= require('./routes/commentRoutes');
 
 // Load env vars
 dotenv.config();
@@ -16,34 +21,34 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // DB Connect
-const db_connent = db();
+const db = connectDB();
 
 // Middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:3000', // Frontend URL
   credentials: true
 }));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // static folder for uploads
 
-// // Routes
-// app.use('/api/auth', require('./routes/authRoutes'));
-// app.use('/api/post', require('./routes/postRoutes'));
-// app.use('/api/comment', require('./routes/commentRoutes'));
+// //APi Routes
 
-// Error middleware
-app.use((err, req, res, next) => {
-    console.log("bhai error agya !");
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something went wrong!' });
-});
+ app.use('/api/auth', authRoutes);
+ app.use('/api/user', userRoutes);
+ app.use('/api/post', postRoutes);
+ app.use('/api/comment',commentRoutes);
+
+// Global error handler (should be after all routes)
+app.use(errorHandler);
 
 // Default Route
 app.get('/', (req, res) => {
-    res.send('Media App API Working ✅');
+  console.log("om Bhai ye home route  hai")
+    res.send('Media App Backend Running  🚀');
   });
-  
+
 // Start server
 app.listen(PORT, () => {
   console.log(`OM Bhai Server jo hai first class chal rha hai on --> http://localhost:${PORT}`);
