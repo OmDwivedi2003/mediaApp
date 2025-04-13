@@ -1,4 +1,3 @@
-Niche poore README.md file ka complete code diya gaya hai, jise directly apne project repository mein use kar sakte ho:
 
 ```markdown
 # MediaApp 🎬📝
@@ -101,4 +100,3 @@ MediaApp/
 This project is licensed under the MIT License.
 ```
 
-Is README ka code complete hai aur aap apne project ke hisab se customize bhi kar sakte ho (jaise ki repository URL, social links, aur environment variables). Agar aapko aur koi modification ya additional detail chahiye, to batao!
