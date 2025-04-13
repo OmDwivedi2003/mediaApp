@@ -1,30 +1,33 @@
+
 const Comment = require('../models/Comment');
 const Post = require('../models/Post');
 
+
+//  Add a Comment to a Post
 const addComment = async (req, res, next) => {
   try {
-    const { text,parentComment } = req.body;
+     // Step 1: Extract text from request body
+    const { text } = req.body;
     const postId = req.params.postId;
 
+     // Step 2: Find the post by its ID
     const post = await Post.findById(postId);
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
+     // Step 3: Prevent the post creator from commenting on their own post
     if (post.createdBy.toString() === req.userId)
       return res.status(403).json({ message: 'Cannot comment on your own post' });
 
-    const newComment = new Comment({
-      text,
-      createdBy: req.userId,
-      postId: postId,
-    });
-console.log(newComment);
-
-await newComment.save();
-
-post.comments.push(newComment._id);
-await post.save();
-res.status(201).json({ message: 'Comment added!', comment: newComment });
-;
+     // Step 4: Create a new comment instance
+    const newComment = new Comment({ text, createdBy: req.userId,  postId: postId, });
+        //console.log(newComment);
+     // Step 5: Save the new comment in the database
+        await newComment.save();
+ // Step 6: Add comment ID to post's comments array
+       post.comments.push(newComment._id);
+        await post.save();
+// Step 7: Send success response
+   res.status(201).json({ message: 'Comment added!', comment: newComment });
   } catch (error) {
     console.log(error)
     next(error);
@@ -32,16 +35,23 @@ res.status(201).json({ message: 'Comment added!', comment: newComment });
   }
 };
 
+// Update a Comment
 const updateComment = async (req, res, next) => {
   try {
-   // console.log(req.params)
+          // console.log(req.params)
+    // Step 1: Find the comment by ID
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
+    // Step 2: Check if the current user is the creator
     if (comment.createdBy.toString() !== req.userId)
       return res.status(403).json({ message: 'Unauthorized, Only the creator can edit this comment!' });
+     // Step 3: Update the text
     const { text } = req.body;
     comment.text = text;
+    
+    // Step 4: Save the updated comment
     await comment.save();
+    // Step 5: Send success response
     res.status(200).json({ message: 'Comment updated!', comment });
   } catch (error) {
     next(error);
@@ -49,19 +59,22 @@ const updateComment = async (req, res, next) => {
   }
 };
 
+//  Delete a Comment
 const deleteComment = async (req, res, next) => {
   try {
+    // Step 1: Find the comment by ID
     const comment = await Comment.findById(req.params.commentId);
     if (!comment) return res.status(404).json({ message: 'Comment not found' });
+    // Step 2: Check if the current user is the creator
     if (comment.createdBy.toString() !== req.userId)
       return res.status(403).json({ message: 'Unauthorized, only the creator can delete this comment!' });
-
+// Step 3: Delete the comment
     await Comment.deleteOne({ _id: req.params.commentId });
-
+// Step 4: Remove the comment ID from the associated Post's comments array
         await Post.findByIdAndUpdate(comment.postId, {
             $pull: { comments: req.params.commentId }
         });
-
+ // Step 5: Send success response
     res.status(200).json({ message: 'Comment deleted' });
   } catch (error) {
     next(error);
@@ -114,19 +127,9 @@ const getSingleComment = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  addComment,
-  updateComment,
-  deleteComment,
-  getCommentsByPost,
-  getCommentsByUser,
-  getSingleComment
-};
+// Exporting all controller functions
+module.exports = { addComment, updateComment, deleteComment,getCommentsByPost,getCommentsByUser,getSingleComment };
 
-
-// Here's a breakdown of how the **Comment Controller** methods work in your code:
-
-// ---
 
 // ### 1. **Add Comment (`addComment`)**
 
@@ -142,8 +145,6 @@ module.exports = {
 //   - If successful: `status 201` with the message "Comment added!" and the newly created comment.
 //   - If the post is not found: `status 404` with an error message.
 //   - If the user tries to comment on their own post: `status 403` with an error message.
-
-// ---
 
 // ### 2. **Update Comment (`updateComment`)**
 
@@ -192,7 +193,3 @@ module.exports = {
 // - For each function, errors are forwarded to the `next(error)` middleware for centralized error handling.
 // - If any comment or post is not found, appropriate error messages are returned with `404` status codes.
 // - Unauthorized actions (e.g., commenting on one's own post or updating/deleting comments made by others) return `403` status codes.
-
-// ---
-
-// This should give you a clear understanding of how each comment-related controller works. Let me know if you need more clarification!
