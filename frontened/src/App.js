@@ -9,8 +9,11 @@ import User from './pages/User'; // user details/edit/delete
 import Post from './pages/Post'; // post create/edit/delete
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
-
+import EditProfile from './components/EditProfile';
 import SinglePost from './pages/SinglePost';
+import EditPost from './components/EditPost';
+import CreatePost from './components/CreatePost';
+import Comment from './components/Comment';
 
 function App() {
   return (
@@ -26,10 +29,15 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/logout' element={ <PrivateRoute><Logout/></PrivateRoute>}/>
       <Route path='/user-detail' element={<PrivateRoute><User/></PrivateRoute>}/>
-      <Route path ='/post-detail/:id' element={<PrivateRoute><SinglePost/></PrivateRoute>}/>
-      <Route path="/post-detail" element={<Post />} />
+      <Route path="/edit-profile" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
+     <Route path ='/post-detail/:id' element={<PrivateRoute><SinglePost/></PrivateRoute>}/>
+     <Route path ='/edit-post/:id' element={<PrivateRoute><EditPost/></PrivateRoute>}/>
+      <Route path="/post" element={<PrivateRoute><Post/></PrivateRoute>} />
+      <Route path="/create-post" element={<PrivateRoute><CreatePost/></PrivateRoute>} />
+      <Route path="/create-comment/:postId" element={<PrivateRoute><Comment/></PrivateRoute>} />
+      
 
-      <Route/>
+  
      </Routes>
     </BrowserRouter>
    

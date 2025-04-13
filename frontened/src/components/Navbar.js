@@ -19,7 +19,7 @@ function Navbar() {
         <>
           <Link to="/" style={navlinkStyle}>Home</Link>
           <Link to="/user-detail" style={navlinkStyle}>Profile</Link>
-          <Link to="/post-detail" style={navlinkStyle}>Post</Link>
+          <Link to="/post" style={navlinkStyle}>Post</Link>
           <Link to="/logout" style={navlinkStyle}>Logout</Link>
         </>
       )}

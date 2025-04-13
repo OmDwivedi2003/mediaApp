@@ -40,15 +40,15 @@ function Signup() {
         }
       });
       console.log("bhai ye hai signup api ka response:",response);
-      setMessage('Signup successfully hogya hai ab tu 9 sec baad login page me redirect ho jayega.');
+      setMessage('Signup successfully hogya hai ab tu 2 sec baad login page me redirect ho jayega.');
 
        // Reset all values
       setFormData({ name: '',email: '', password: '', dob: '', contact: '',city: '', profilePic: null, });
 
-       //redirect to login after 9 second
-      setInterval(()=>{
+       //redirect to login after 2 second
+      setTimeout(()=>{
         navigate('/login')
-       },9000);
+       },2000);
 
     } catch (error) {
       console.log("Bhai signup api endpoint me koi dikkat arhi backend se .", error)
@@ -73,7 +73,7 @@ function Signup() {
         <br></br> <br></br>
 
         <label htmlFor='dob' >Date of Birth  </label>
-        <input type="date" name="dob" value={formData.dob} onChange={handleChange} required />
+        <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
         <br></br> <br></br>
 
         <label htmlFor='contact' >Mobile no.  </label>

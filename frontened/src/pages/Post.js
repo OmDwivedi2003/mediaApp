@@ -1,64 +1,68 @@
-// src/pages/MyPosts.jsx
-
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Direct axios (local instance bhi bana sakta hai)
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const MyPosts = () => {
-  const [myPosts, setMyPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchMyPosts = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/api/post/my-posts", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      setMyPosts(res.data.posts);
-    } catch (error) {
-      console.error(
-        "Error fetching your posts:",
-        error.response?.data?.message || error.message
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+const Post = () => {
+  const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchMyPosts = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get("http://localhost:4000/api/post/my-post", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setPosts(res.data.posts);
+      } catch (error) {
+        setMessage("Failed to fetch your posts.");
+      }
+    };
     fetchMyPosts();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.delete(`http://localhost:4000/api/post/delete-post/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPosts(posts.filter(post => post._id !== id));
+      setMessage(res.data.message || "Post deleted successfully!");
+    } catch (error) {
+      setMessage("Error deleting post.");
+    }
+  };
 
   return (
     <div>
-      <h2>📜 Your Posts</h2>
-
-      {myPosts.length === 0 ? (
+    <h2>Welcome to my mediaAPP , you can create,read, edit, delete your post.</h2>
+        <Link to="/create-post">
+        <button>Create New Post</button>
+      </Link>
+      <br></br><br></br><br></br>
+      <hr></hr>
+      <h2>My Posts</h2>
+      {posts.length === 0 ? (
         <p>No posts found.</p>
       ) : (
-        myPosts.map((post) => (
-          <div key={post._id} >
-            <h3>{post.title}</h3>
-            <p>{post.desc}</p>
-
-            {post.image && (
-              <img
-                src={`http://localhost:4000/uploads/${post.image}`}
-                alt="post"
-               
-              />
-            )}
-
-            <p>👍 Likes: {post.likes.length}</p>
-            <p>💬 Comments: {post.comments.length}</p>
-            <p>🕒 Posted on: {new Date(post.createdAt).toLocaleString()}</p>
+        posts.map(post => (
+          <div key={post._id}>
+            <h3>post-title :"{post.title}"</h3>
+            <p>post-desc: {post.desc}</p>
+             <Link  to={`/post-detail/${post._id}`}> <button>View</button> </Link>
+            <Link to={`/edit-post/${post._id}`}><button>Edit</button></Link>
+            <button onClick={() => handleDelete(post._id)}>Delete</button>
           </div>
         ))
       )}
+      {message && <p>{message}</p>}
     </div>
   );
 };
 
-export default MyPosts;
+export default Post;

@@ -10,7 +10,12 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   contact: { type: String },
   city: { type: String },
-  password: { type: String, required: true },
+  password: { type: String, required: true, minlength: 6 },
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post'
+}]
+
 }, { timestamps: true });
 
 // Calculate age before saving
