@@ -14,6 +14,7 @@ import SinglePost from './pages/SinglePost';
 import EditPost from './components/EditPost';
 import CreatePost from './components/CreatePost';
 import Comment from './components/Comment';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
 
   
      </Routes>
+     <Footer/>
     </BrowserRouter>
    
   );

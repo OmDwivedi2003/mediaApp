@@ -14,9 +14,10 @@ const CreatePost = () => {
       setPost({ ...post, [e.target.name]: e.target.value });
     }
   };
+
   const handleback = () => {
-    navigate(-1);  // -1 ka matlab previous page
-  }
+    navigate(-1);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,36 +36,118 @@ const CreatePost = () => {
       });
 
       setMessage(res.data.message);
-      setTimeout(() => navigate("/post"), 1500); // success ke baad MyPosts page pe bhej dega
+      setTimeout(() => navigate("/post"), 1500);
     } catch (error) {
-      setMessage(
-        error.response?.data?.message || "Failed to create post."
-      );
+      setMessage(error.response?.data?.message || "Failed to create post.");
     }
   };
 
   return (
-    <div>
-      <h2>Create New Post</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Title:</label>
-        <input  type="text"  name="title"  value={post.title}    onChange={handleChange}  required />
-        <br />
-   <br></br>
-        <label>Description:</label>
-        <textarea  name="desc" value={post.desc}onChange={handleChange}  required rows={2} cols={25}></textarea>
-        <br />
-<br></br>
-        <label>Image:</label>
-        <input  type="file"  name="image" accept="image/*"   onChange={handleChange}  required />
-        <br />
-         <br></br>
-        <button type="submit">Create Post</button>
-        <button onClick={handleback}>Back</button>
+    <div style={container}>
+      <h2 style={heading}>Create New Post</h2>
+      {message && <p style={messageStyle}>{message}</p>}
+      <form onSubmit={handleSubmit} style={form}>
+        <div style={formGroup}>
+          <label>Title:</label>
+          <input
+            type="text"
+            name="title"
+            value={post.title}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div style={formGroup}>
+          <label>Description:</label>
+          <textarea
+            name="desc"
+            value={post.desc}
+            onChange={handleChange}
+            required
+            rows={3}
+          />
+        </div>
+
+        <div style={formGroup}>
+          <label>Image:</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div style={buttonGroup}>
+          <button type="submit" style={submitBtn}>Create Post</button>
+          <button type="button" onClick={handleback} style={backBtn}>Back</button>
+        </div>
       </form>
     </div>
   );
 };
 
 export default CreatePost;
+
+// 🔧 Styles
+const container = {
+  maxWidth: "550px",
+  margin: "40px auto",
+  padding: "25px",
+  backgroundColor: "#f4f4f4",
+  borderRadius: "12px",
+  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+  fontFamily: "'Segoe UI', sans-serif"
+};
+
+const heading = {
+  textAlign: "center",
+  marginBottom: "25px",
+  color: "#333",
+  fontSize: "24px"
+};
+
+const form = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "15px"
+};
+
+const formGroup = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "6px"
+};
+
+const buttonGroup = {
+  display: "flex",
+  justifyContent: "space-between",
+  marginTop: "15px"
+};
+
+const submitBtn = {
+  padding: "10px 20px",
+  backgroundColor: "#28a745",
+  color: "#fff",
+  border: "none",
+  borderRadius: "8px",
+  cursor: "pointer"
+};
+
+const backBtn = {
+  padding: "10px 20px",
+  backgroundColor: "#6c757d",
+  color: "#fff",
+  border: "none",
+  borderRadius: "8px",
+  cursor: "pointer"
+};
+
+const messageStyle = {
+  color: "green",
+  textAlign: "center",
+  fontWeight: "500",
+  marginBottom: "15px"
+};
